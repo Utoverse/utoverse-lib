@@ -30,7 +30,7 @@ jobs:
         run: |
           rm -rf docs
           mkdir -vp docs
-          cp -vrf target/site/apidocs/* docs/
+          cp -vrf target/apidocs/* docs/
 
       - name: Configure Git # 配置Git
         env:
