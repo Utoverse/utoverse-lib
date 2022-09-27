@@ -39,9 +39,6 @@ jobs:
 
       - name: Generate docs
         run: mvn clean package -P release
-      
-      - name: list 
-        run: 'ls ./target -l'
         
       - name: Setup Pages
         uses: actions/configure-pages@v2
@@ -50,8 +47,13 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: './target/apidocs'
+          path: target/apidocs
           
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          path: target/*.jar
