@@ -1,0 +1,42 @@
+name: ${project.name}
+main: ${package}.${package.entry}
+version: ${project.version}
+description: '元界核心 Lib'
+website: https://plugins.utoverse.cn/
+authors:
+  - tuanzisama
+api-version: 1.19
+
+depend:
+  - 'helper'
+  - 'helper-sql'
+  - 'helper-profiles'
+
+permissions:
+  utolib.player:
+    default: true
+    description: 'user only'
+  utolib.operator:
+    default: op
+    description: 'admin only'
+
+  utolib.command.tp:
+    default: op
+    description: "使用 /tp 指令以使用传送至某一玩家处"
+  utolib.command.tppos:
+    default: op
+    description: "使用 /tppos 指令以传送指定坐标和世界"
+
+
+
+commands:
+#  utoverselib:
+#    description: 插件根指令
+#    usage: /<command>
+#    aliases: [ 'utolib', 'ulib' ]
+  tp:
+    description: 使用 /tp 指令以使用传送至某一玩家处
+    usage: /<command>
+  tppos:
+    description: 使用 /tppos 指令以传送指定坐标和世界
+    usage: /<command>
