@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,8 +37,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      #- name: Generate docs
-      #  run: mvn clean package -P release
+      - name: Generate docs
+        run: mvn clean package -P release
       
       - name: list 
         run: 'ls ./target -l'
@@ -46,12 +46,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
         
-        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: 'target/apidocs/*'
+          path: './target/apidocs/*'
           
       - name: Deploy to GitHub Pages
         id: deployment
