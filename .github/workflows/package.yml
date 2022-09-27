@@ -1,5 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: release utoverselib
 
 on:
   # Runs on pushes targeting the default branch
@@ -56,4 +55,5 @@ jobs:
       - name: capture build artifacts
         uses: actions/upload-artifact@v3.0.0
         with:
+          name: "UtoverseLib"
           path: target/*.jar
