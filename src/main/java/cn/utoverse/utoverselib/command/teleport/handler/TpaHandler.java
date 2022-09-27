@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TeleportPlayerHandler implements FunctionalHandler<Player> {
+public class TpaHandler implements FunctionalHandler<Player> {
 
     @Override
     public void onCommand(CommandContext<Player> c) throws CommandInterruptException {
