@@ -24,7 +24,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Generate docs #生成Javadoc
-        run: mvn javadoc:javadoc
+        run: mvn clean package -P release
 
       - name: Copy to Location # 复制Javadoc到一个新文件夹，便于进行git操作
         run: |
