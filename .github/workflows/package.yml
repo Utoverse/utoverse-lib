@@ -55,5 +55,5 @@ jobs:
       - name: capture build artifacts
         uses: actions/upload-artifact@v3.0.0
         with:
-          name: "UtoverseLib.zip"
+          name: "UtoverseLib"
           path: target/*.jar
