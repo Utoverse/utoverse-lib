@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.util.function.Predicate;
 
-//implements FunctionalCommandBuilder<T>
 public class CommandBuilder<T extends CommandSender> {
 
     private FunctionalCommandBuilder<T> luckoCmdBuilder = (FunctionalCommandBuilder<T>) Commands.create();

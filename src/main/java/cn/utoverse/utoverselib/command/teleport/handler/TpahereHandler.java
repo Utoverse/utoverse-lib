@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class TpaHandler implements FunctionalHandler<Player> {
+public class TpahereHandler implements FunctionalHandler<Player> {
 
     @Override
     public void onCommand(CommandContext<Player> c) throws CommandInterruptException {
@@ -43,7 +43,7 @@ public class TpaHandler implements FunctionalHandler<Player> {
         int duration = yaml.getInt("teleport-session-duration", 120);
 
         BaseComponent[] msgComp = new MessageBuilder().info().append("玩家").space().appendEntity(c.sender()).space()
-                .append("请求传送到你这里").enter()
+                .append("请求你传送他那里").enter()
                 .append("若想接受传送，输入").appendCommand("&9/tpaccept", "/tpaccept").enter()
                 .append("若想拒绝传送，输入").appendCommand("&9/tpdeny", "/tpdeny").enter()
                 .append("此请求将在").append("&9" + duration + "秒").append("后自动取消")
@@ -55,7 +55,7 @@ public class TpaHandler implements FunctionalHandler<Player> {
                         .requester(c.sender())
                         .createTime(new Date())
                         .location(c.sender().getLocation())
-                        .reason(TeleportReason.TPA)
+                        .reason(TeleportReason.TPAHERE)
                         .build()
         );
 

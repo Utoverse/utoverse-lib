@@ -7,7 +7,6 @@ import cn.utoverse.utoverselib.util.Util;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -16,8 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class TpHandler implements FunctionalHandler<Player> {
-
+public class TphereHandler implements FunctionalHandler<Player> {
     @Override
     public void onCommand(CommandContext<Player> c) throws CommandInterruptException {
         Optional<Player> optionalPlayer = c.arg(0).parse(Player.class);
@@ -32,9 +30,9 @@ public class TpHandler implements FunctionalHandler<Player> {
             return;
         }
 
-        BaseComponent[] msgComp = new MessageBuilder().info().append("正在传送至").space().appendEntity(other).build();
-        MsgUtil.sendDirectMessage(c.sender(), msgComp);
-        TeleportUtil.teleportAsync(c.sender(), other.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+        MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().info().append("正在传送...").build());
+        MsgUtil.sendDirectMessage(other, new MessageBuilder().info().append("正在传送...").build());
+        TeleportUtil.teleportAsync(other, c.sender().getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
     }
 
     @Override

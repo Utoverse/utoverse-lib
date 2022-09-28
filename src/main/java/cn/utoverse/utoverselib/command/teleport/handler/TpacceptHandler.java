@@ -3,6 +3,7 @@ package cn.utoverse.utoverselib.command.teleport.handler;
 import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.account.Account;
+import cn.utoverse.utoverselib.profile.account.TeleportReason;
 import cn.utoverse.utoverselib.profile.account.TeleportSession;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.TeleportUtil;
@@ -39,6 +40,7 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
                     return;
                 }
                 Player other = optionalPlayer.get();
+
                 Account senderAccount = UserProfileRepo.getProfile(c.sender());
                 TeleportSession teleportSession = senderAccount.getTeleportSessions().get(other.getName());
 
@@ -46,6 +48,7 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
                     MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().warn().append("你没有待处理的传送请求").build());
                     return;
                 }
+
                 acceptPlayerTeleport(c.sender(), Arrays.asList(teleportSession));
             }
         } else {
@@ -91,7 +94,11 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
 
                 if (diffSeconds < duration) {
                     if (session.getRequester().isOnline()) {
-                        TeleportUtil.teleportAsync(session.getRequester(), sender.getLocation());
+                        if (TeleportReason.TPA.equals(session.getReason())) {
+                            TeleportUtil.teleportAsync(session.getRequester(), sender.getLocation());
+                        } else if (TeleportReason.TPAHERE.equals(session.getReason())) {
+                            TeleportUtil.teleportAsync(sender, session.getLocation());
+                        }
                     }
                     MsgUtil.sendDirectMessage(session.getRequester(), new MessageBuilder().info().append("正在传送至").space().appendEntity(sender).build());
                     acceptedSessions.add(session);

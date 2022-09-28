@@ -33,5 +33,5 @@ public class TeleportSession {
      */
     @Getter
     @Setter
-    private String reason;
+    private TeleportReason reason;
 }

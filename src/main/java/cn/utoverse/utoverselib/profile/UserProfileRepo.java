@@ -3,14 +3,18 @@ package cn.utoverse.utoverselib.profile;
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
 import cn.utoverse.utoverselib.profile.account.Account;
 import cn.utoverse.utoverselib.profile.account.AccountTimes;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -101,8 +105,18 @@ public class UserProfileRepo {
                 .teleportSessions(new TreeMap<>())
                 .build();
 
-        userMap.put(account.getName(), account);
+        ConfigurationSection homes = yaml.getConfigurationSection(PROFILE_HOMES_PATH);
+        if (homes != null) {
+            System.out.println(StringUtils.join(homes.getKeys(false), ", "));
 
+            homes.getKeys(false).forEach(key -> {
+                account.getHomes().put(key, YamlToLocation(yaml, "home." + key));
+            });
+        } else {
+            account.setHomes(new HashMap<>());
+        }
+
+        userMap.put(account.getName(), account);
         return account;
     }
 
@@ -160,6 +174,23 @@ public class UserProfileRepo {
         yaml.set(path + ".world", loc.getWorld().getUID().toString());
         yaml.set(path + ".world-name", loc.getWorld().getName());
         return yaml;
+    }
+
+    /**
+     * YAML 转坐标
+     *
+     * @param yaml yaml对象
+     * @param path 存储key路径
+     * @return Location
+     */
+    private static Location YamlToLocation(YamlConfiguration yaml, String path) {
+        double x = yaml.getDouble(path + ".x");
+        double y = yaml.getDouble(path + ".y");
+        double z = yaml.getDouble(path + ".z");
+        float yaw = Float.parseFloat(yaml.getString(path + ".yaw"));
+        float pitch = Float.parseFloat(yaml.getString(path + ".pitch"));
+        World world = Bukkit.getWorld(yaml.getString(path + ".world"));
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     protected static String getProfileDir() {

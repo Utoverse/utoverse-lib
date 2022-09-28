@@ -8,10 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Builder
 public class Account implements Cloneable {
@@ -41,7 +40,7 @@ public class Account implements Cloneable {
      */
     @Getter
     @Setter
-    private ConcurrentHashMap<String, Location> homes;
+    private HashMap<String, Location> homes;
 
     /**
      * 是否被禁言
@@ -87,6 +86,7 @@ public class Account implements Cloneable {
 
     /**
      * 获取 Bukkit 玩家实例
+     *
      * @return
      */
     public Player getPlayer() {

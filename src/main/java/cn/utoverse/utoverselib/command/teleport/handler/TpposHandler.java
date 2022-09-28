@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Tppos_Handler implements FunctionalHandler<Player> {
+public class TpposHandler implements FunctionalHandler<Player> {
 
     @Override
     public void onCommand(CommandContext<Player> c) throws CommandInterruptException {

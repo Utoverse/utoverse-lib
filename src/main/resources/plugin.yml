@@ -23,18 +23,33 @@ permissions:
   utolib.command.tp:
     default: op
     description: "使用 /tp 指令以使用传送至某一玩家处"
+  utolib.command.tphere:
+    default: op
+    description: "使用 /tp 指令以使用传送至某一玩家处"
   utolib.command.tppos:
     default: op
     description: "使用 /tppos 指令以传送指定坐标和世界"
   utolib.command.tpa:
     default: true
     description: "使用 /tpa 指令以请求传送至另一玩家的位置"
+  utolib.command.tpahere:
+    default: true
+    description: "使用 /tpa 指令以请求传送另一玩家到你的位置"
   utolib.command.tpaccept:
     default: true
     description: "使用 /tpa 指令以接受玩家请求传送"
   utolib.command.tpdeny:
     default: true
     description: "使用 /tpdeny 指令以拒绝玩家请求传送"
+  utolib.command.home:
+    default: true
+    description: "使用 /home 指令以传送到设置的家"
+  utolib.command.sethome:
+    default: true
+    description: "使用 /sethome 指令以设置一个家"
+  utolib.command.delhome:
+    default: true
+    description: "使用 /delhome 指令以删除一个设置的家"
 
 
 
@@ -44,12 +59,22 @@ commands:
   #    usage: /<command>
   #    aliases: [ 'utolib', 'ulib' ]
   tp:
-    description: 使用 /tp 指令以使用传送至某一玩家处
+    description: 传送至某一玩家处
+  tphere:
+    description: 传送另一玩家到你的位置
   tppos:
-    description: 使用 /tppos 指令以传送指定坐标和世界
+    description: 传送指定坐标和世界
   tpa:
     description: 请求传送至另一玩家的位置
+  tpahere:
+    description: 请求传送另一玩家到你的位置
   tpaccept:
     description: 接受玩家请求传送
   tpdeny:
     description: 拒绝玩家请求传送
+  home:
+    description: 传送到设置的家
+  sethome:
+    description: 设置一个家
+  delhome:
+    description: 删除一个设置的
