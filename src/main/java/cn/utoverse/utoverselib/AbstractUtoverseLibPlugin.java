@@ -18,15 +18,13 @@ public class AbstractUtoverseLibPlugin extends ExtendedJavaPlugin implements Uto
     @Getter
     private static transient AbstractUtoverseLibPlugin instance;
     @Getter
-    private static Configuration configuration;
-    @Getter
     private UtoverseLibApiProvider apiProvider;
 
     @Override
     protected void enable() {
         instance = this;
-        configuration = new Configuration(this);
-        MsgUtil.setPrefixList(configuration.getFiles().get(ConfigFile.CONFIG).getStringList("msg-prefix"));
+        Configuration.init();
+        MsgUtil.setPrefixList(Configuration.getFiles().get(ConfigFile.CONFIG).getStringList("msg-prefix"));
 
         MsgUtil.printToConsole("&e-----------------------");
         MsgUtil.printToConsole("      _   _ _                           _    _ _        ");

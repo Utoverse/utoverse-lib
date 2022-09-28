@@ -9,19 +9,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class Configuration {
 
-    private final AbstractUtoverseLibPlugin plugin;
     @Getter
-    private final Map<ConfigFile, FileConfiguration> files = new HashMap<>();
+    private static ConcurrentHashMap<ConfigFile, YamlConfiguration> files = new ConcurrentHashMap<>();
 
-    public Configuration(AbstractUtoverseLibPlugin plugin) {
-        this.plugin = plugin;
+    /**
+     * 载入配置文件
+     */
+    public static void init() {
+        AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
 
         List<String> defaultFiles = Arrays.asList(ConfigFile.CONFIG.getPath());
         for (String name : defaultFiles) {
@@ -40,11 +41,11 @@ public class Configuration {
         reload();
     }
 
-
     /**
-     * Maps all files to aliases.
+     * 重载配置文件
      */
-    public void reload() {
+    public static void reload() {
+        AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
         files.put(ConfigFile.CONFIG, YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + ConfigFile.CONFIG.getPath())));
     }
 }
