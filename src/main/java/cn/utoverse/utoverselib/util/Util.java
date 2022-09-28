@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -56,8 +57,12 @@ public class Util {
      */
     @NotNull
     public static List<String> getPlayerList() {
-        List<String> tabList = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-        return tabList;
+        return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+    }
+
+    @NotNull
+    public static List<String> getPlayerList(String filter) {
+        return getPlayerList(filter, new ArrayList<>());
     }
 
     /**
@@ -66,9 +71,11 @@ public class Util {
      * @return the player names
      */
     @NotNull
-    public static List<String> getPlayerList(String filter) {
+    public static List<String> getPlayerList(String filter, List<String> ignorePlayers) {
         List<String> tabList = getPlayerList();
-        return tabList.stream().filter(s -> s.toLowerCase().startsWith(filter.toLowerCase())).toList();
+        return tabList.stream().filter(s -> {
+            return s.toLowerCase().startsWith(filter.toLowerCase()) && !(ignorePlayers.contains(s));
+        }).toList();
     }
 
     /**

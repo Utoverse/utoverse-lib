@@ -26,17 +26,30 @@ permissions:
   utolib.command.tppos:
     default: op
     description: "使用 /tppos 指令以传送指定坐标和世界"
+  utolib.command.tpa:
+    default: true
+    description: "使用 /tpa 指令以请求传送至另一玩家的位置"
+  utolib.command.tpaccept:
+    default: true
+    description: "使用 /tpa 指令以接受玩家请求传送"
+  utolib.command.tpdeny:
+    default: true
+    description: "使用 /tpdeny 指令以拒绝玩家请求传送"
 
 
 
 commands:
-#  utoverselib:
-#    description: 插件根指令
-#    usage: /<command>
-#    aliases: [ 'utolib', 'ulib' ]
+  #  utoverselib:
+  #    description: 插件根指令
+  #    usage: /<command>
+  #    aliases: [ 'utolib', 'ulib' ]
   tp:
     description: 使用 /tp 指令以使用传送至某一玩家处
-    usage: /<command>
   tppos:
     description: 使用 /tppos 指令以传送指定坐标和世界
-    usage: /<command>
+  tpa:
+    description: 请求传送至另一玩家的位置
+  tpaccept:
+    description: 接受玩家请求传送
+  tpdeny:
+    description: 拒绝玩家请求传送

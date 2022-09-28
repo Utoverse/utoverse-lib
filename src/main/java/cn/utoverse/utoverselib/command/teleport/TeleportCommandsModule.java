@@ -1,9 +1,7 @@
 package cn.utoverse.utoverselib.command.teleport;
 
 import cn.utoverse.utoverselib.command.CommandBuilder;
-import cn.utoverse.utoverselib.command.teleport.handler.TpHandler;
-import cn.utoverse.utoverselib.command.teleport.handler.TpaHandler;
-import cn.utoverse.utoverselib.command.teleport.handler.Tppos_Handler;
+import cn.utoverse.utoverselib.command.teleport.handler.*;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
 
@@ -36,5 +34,21 @@ public class TeleportCommandsModule implements TerminableModule {
                 .description("请求传送至另一玩家的位置")
                 .handler(new TpaHandler())
                 .registerAndBind(consumer, "tpa");
+
+        new CommandBuilder()
+                .assertPlayer()
+                .assertPermission("utolib.command.tpaccept")
+                .assertUsage("[player]")
+                .description("接受玩家请求传送")
+                .handler(new TpacceptHandler())
+                .registerAndBind(consumer, "tpaccept");
+
+        new CommandBuilder()
+                .assertPlayer()
+                .assertPermission("utolib.command.tpdeny")
+                .assertUsage("[player]")
+                .description("拒绝玩家请求传送")
+                .handler(new TpdenyHandler())
+                .registerAndBind(consumer, "tpdeny");
     }
 }
