@@ -27,7 +27,16 @@ public class HomeHandler implements FunctionalHandler<Player> {
             if (location == null) {
                 YamlConfiguration yaml = Configuration.getFiles().get(ConfigFile.CONFIG);
                 String spawnWorld = yaml.getString("spawn-world", "world");
-                location = Bukkit.getWorld(spawnWorld).getSpawnLocation();
+
+                try {
+                    if (Bukkit.getWorlds().contains(spawnWorld)) {
+                        location = Bukkit.getWorld(spawnWorld).getSpawnLocation();
+                    } else {
+                        location = Bukkit.getWorld("world").getSpawnLocation();
+                    }
+                } catch (Exception e) {
+                    MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().warn().append("你的床已丢失或被阻挡").build());
+                }
             }
 
             TeleportUtil.teleportAsync(c.sender(), location);
