@@ -3,6 +3,7 @@ package cn.utoverse.utoverselib;
 import cn.utoverse.utoverselib.api.ApiRegistrationUtil;
 import cn.utoverse.utoverselib.api.UtoverseLibApiProvider;
 import cn.utoverse.utoverselib.command.CommandManager;
+import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.listener.ProfileListener;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.config.ConfigFile;
@@ -40,6 +41,7 @@ public class AbstractUtoverseLibPlugin extends ExtendedJavaPlugin implements Uto
 
         new CommandManager();
         this.bindModule(new ProfileListener(this));
+        this.bindModule(new UserProfileRepo());
 
         registerApiProvider();
 

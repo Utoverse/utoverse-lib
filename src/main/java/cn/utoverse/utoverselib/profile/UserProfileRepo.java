@@ -3,25 +3,28 @@ package cn.utoverse.utoverselib.profile;
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
 import cn.utoverse.utoverselib.profile.account.Account;
 import cn.utoverse.utoverselib.profile.account.AccountTimes;
-import org.apache.commons.lang.StringUtils;
+import lombok.Getter;
+import me.lucko.helper.Schedulers;
+import me.lucko.helper.terminable.TerminableConsumer;
+import me.lucko.helper.terminable.module.TerminableModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class UserProfileRepo {
+public class UserProfileRepo implements TerminableModule {
 
     private static ConcurrentHashMap<String, Account> userMap = new ConcurrentHashMap<>();
+    @Getter
+    private static List<String> usernameMap = new ArrayList<>();
     private final static String PROFILE_TIMESTAMPS_PATH = "timestamps";
     private final static String PROFILE_HOMES_PATH = "homes";
 
@@ -106,14 +109,12 @@ public class UserProfileRepo {
                 .build();
 
         ConfigurationSection homes = yaml.getConfigurationSection(PROFILE_HOMES_PATH);
-        if (homes != null) {
-            System.out.println(StringUtils.join(homes.getKeys(false), ", "));
+        account.setHomes(new HashMap<>());
 
+        if (homes != null) {
             homes.getKeys(false).forEach(key -> {
-                account.getHomes().put(key, YamlToLocation(yaml, "home." + key));
+                account.getHomes().put(key, YamlToLocation(yaml, PROFILE_HOMES_PATH + "." + key));
             });
-        } else {
-            account.setHomes(new HashMap<>());
         }
 
         userMap.put(account.getName(), account);
@@ -145,6 +146,22 @@ public class UserProfileRepo {
         }
     }
 
+    private void loadAllUsersAsync() {
+        Schedulers.async().run(() -> {
+            AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
+            final File userdir = new File(getProfileDir());
+            if (!userdir.exists()) {
+                return;
+            }
+            usernameMap.clear();
+            for (final String string : userdir.list()) {
+                if (!string.endsWith(".yml")) {
+                    continue;
+                }
+                usernameMap.add(string);
+            }
+        });
+    }
 
     /**
      * 获取玩家数据元文件
@@ -189,11 +206,22 @@ public class UserProfileRepo {
         double z = yaml.getDouble(path + ".z");
         float yaw = Float.parseFloat(yaml.getString(path + ".yaw"));
         float pitch = Float.parseFloat(yaml.getString(path + ".pitch"));
-        World world = Bukkit.getWorld(yaml.getString(path + ".world"));
+        World world = null;
+        try {
+            UUID uuid = UUID.fromString(yaml.getString(path + ".world"));
+            world = Bukkit.getWorld(uuid);
+        } catch (Exception e) {
+            world = Bukkit.getWorld(yaml.getString(path + ".world-name"));
+        }
         return new Location(world, x, y, z, yaw, pitch);
     }
 
     protected static String getProfileDir() {
         return AbstractUtoverseLibPlugin.getInstance().getDataFolder() + "/userdata";
+    }
+
+    @Override
+    public void setup(@NotNull TerminableConsumer terminableConsumer) {
+        loadAllUsersAsync();
     }
 }

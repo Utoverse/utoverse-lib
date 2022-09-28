@@ -25,10 +25,11 @@ public class JoinEventHandler implements Consumer<PlayerJoinEvent> {
                 UserProfile.update(account);
             } else {
                 UserProfile.create(event.getPlayer(), new Date().getTime());
-                plugin.getLogger().info(String.format("Player %s[%s] profile are created.", event.getPlayer().getName(), event.getPlayer().getUniqueId().toString()));
+                plugin.getLogger().info(String.format("Player %s[%s] profile are created.", event.getPlayer().getName(), event.getPlayer().getUniqueId()));
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, String.format("Player %s[%s] profile throw an exception:", event.getPlayer().getName(), event.getPlayer().getUniqueId().toString()), e);
+            plugin.getLogger().log(Level.WARNING, String.format("Player %s[%s] create/load profile throw an exception:", event.getPlayer().getName(), event.getPlayer().getUniqueId()));
+            e.printStackTrace();
         }
     }
 }
