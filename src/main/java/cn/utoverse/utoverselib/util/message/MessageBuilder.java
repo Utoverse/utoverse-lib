@@ -77,8 +77,33 @@ public class MessageBuilder {
      * @return MessageBuilder
      */
     public MessageBuilder appendHover(String label, String text) {
-        String entityStr = "[&r{label}](show_text={text})".replace("{label}", label).replace("{text}", text);
-        append(entityStr, true, ComponentBuilder.FormatRetention.NONE);
+        String minedownStr = "[&r{label}](show_text={text})".replace("{label}", label).replace("{text}", text);
+        append(minedownStr, true, ComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    /**
+     * 添加点击式执行指令
+     *
+     * @param command 指令
+     * @return MessageBuilder
+     */
+    public MessageBuilder appendCommand(String label, String command) {
+        return appendCommand(label, command, "点击执行此指令");
+    }
+
+    /**
+     * 添加点击式执行指令
+     *
+     * @param command   指令
+     * @param hoverText 悬浮在指令上的文字
+     * @return MessageBuilder
+     */
+    public MessageBuilder appendCommand(String label, String command, String hoverText) {
+        String cmd = command.startsWith("/") ? command : "/" + command;
+
+        String minedownStr = "[&r{label}](show_text={text} run_command={cmd})".replace("{label}", label).replace("{text}", hoverText).replace("{cmd}", cmd);
+        append(minedownStr, true, ComponentBuilder.FormatRetention.NONE);
         return this;
     }
 
@@ -113,6 +138,16 @@ public class MessageBuilder {
      */
     public MessageBuilder space() {
         append(ChatColor.RESET + " ", false, ComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    /**
+     * 添加一个回车。主要用于间距。
+     *
+     * @return MessageBuilder
+     */
+    public MessageBuilder enter() {
+        append(ChatColor.RESET + "\n", false, ComponentBuilder.FormatRetention.NONE);
         return this;
     }
 
@@ -155,7 +190,7 @@ public class MessageBuilder {
         };
 
         // Create the hover event
-        HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Content[]{new Item(id, count, ItemTag.ofNbt(itemJson))});
+        HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Item(id, count, ItemTag.ofNbt(itemJson)));
 
         /* And now we create the text component (this is the actual text that the player sees)
          * and set it's hover event to the item event */
