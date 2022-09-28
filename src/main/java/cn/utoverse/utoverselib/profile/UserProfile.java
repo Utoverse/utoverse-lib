@@ -2,20 +2,20 @@ package cn.utoverse.utoverselib.profile;
 
 import cn.utoverse.utoverselib.profile.account.Account;
 import cn.utoverse.utoverselib.profile.account.AccountTimes;
-import cn.utoverse.utoverselib.profile.account.UserProfileRepo;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class UserProfile {
 
     public static void create(Player player, Long loginTime) {
         AccountTimes accountTimes = AccountTimes.builder()
                 .login(loginTime)
-                .jail(0l)
-                .mute(0l)
-                .lastTeleport(0l)
-                .logout(0l)
+                .jail(0L)
+                .mute(0L)
+                .lastTeleport(0L)
+                .logout(0L)
                 .build();
 
         Account account = Account.builder()
@@ -24,7 +24,7 @@ public class UserProfile {
                 .money(BigDecimal.ZERO)
                 .muted(false)
                 .jailed(false)
-                .ipAddress(player.getAddress().getAddress().toString())
+                .ipAddress(Objects.requireNonNull(player.getAddress()).getAddress().toString())
                 .accountTimes(accountTimes)
                 .build();
 

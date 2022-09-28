@@ -2,8 +2,8 @@ package cn.utoverse.utoverselib.profile.listener.handler;
 
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
 import cn.utoverse.utoverselib.profile.UserProfile;
+import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.account.Account;
-import cn.utoverse.utoverselib.profile.account.UserProfileRepo;
 import lombok.AllArgsConstructor;
 import org.bukkit.event.player.PlayerJoinEvent;
 

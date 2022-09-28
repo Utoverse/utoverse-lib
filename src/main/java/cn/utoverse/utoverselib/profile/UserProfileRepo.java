@@ -1,14 +1,17 @@
-package cn.utoverse.utoverselib.profile.account;
+package cn.utoverse.utoverselib.profile;
 
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.profile.UserProfile;
+import cn.utoverse.utoverselib.profile.account.Account;
+import cn.utoverse.utoverselib.profile.account.AccountTimes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +19,7 @@ public class UserProfileRepo {
 
     private static ConcurrentHashMap<String, Account> userMap = new ConcurrentHashMap<>();
     private final static String PROFILE_TIMESTAMPS_PATH = "timestamps";
-    private final static String PROFILE_HOMES_PATH = "timestamps";
+    private final static String PROFILE_HOMES_PATH = "homes";
 
     /**
      * 创建玩家档案
@@ -27,6 +30,11 @@ public class UserProfileRepo {
         saveProfile(account);
     }
 
+    /**
+     * 保存玩家档案
+     *
+     * @param account 档案账号信息
+     */
     public static void saveProfile(Account account) {
         YamlConfiguration yaml = new YamlConfiguration();
         yaml.set("uuid", account.getUuid().toString());
@@ -47,9 +55,7 @@ public class UserProfileRepo {
         }
 
         if (account.getHomes() != null) {
-            account.getHomes().forEach((String name, Location loc) -> {
-                locationToYaml(yaml, PROFILE_HOMES_PATH + "." + name, loc);
-            });
+            account.getHomes().forEach((String name, Location loc) -> locationToYaml(yaml, PROFILE_HOMES_PATH + "." + name, loc));
         }
 
         try {
@@ -65,7 +71,7 @@ public class UserProfileRepo {
      * 加载档案
      *
      * @param name 玩家名
-     * @return
+     * @return 档案账号信息
      */
     private static Account loadProfile(String name) {
         File rawFile = getProfileRawData(name);
@@ -77,11 +83,11 @@ public class UserProfileRepo {
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(getProfileRawData(name));
 
         AccountTimes accountTimes = AccountTimes.builder()
-                .login(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".last-teleport", 0l))
-                .jail(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".mute", 0l))
-                .mute(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".jail", 0l))
-                .lastTeleport(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".logout", 0l))
-                .logout(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".login", 0l))
+                .login(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".last-teleport", 0L))
+                .jail(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".mute", 0L))
+                .mute(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".jail", 0L))
+                .lastTeleport(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".logout", 0L))
+                .logout(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".login", 0L))
                 .build();
 
         Account account = Account.builder()
@@ -92,6 +98,7 @@ public class UserProfileRepo {
                 .jailed(yaml.getBoolean("jailed"))
                 .ipAddress(yaml.getString("ip-address"))
                 .accountTimes(accountTimes)
+                .teleportSessions(new TreeMap<>())
                 .build();
 
         userMap.put(account.getName(), account);
@@ -99,10 +106,22 @@ public class UserProfileRepo {
         return account;
     }
 
+
+    /**
+     * 获取玩家档案
+     *
+     * @param player 玩家
+     * @return Account
+     */
+    public static Account getProfile(Player player) {
+        return getProfile(player.getName());
+    }
+
     /**
      * 获取玩家档案
      *
      * @param name 玩家名
+     * @return Account
      */
     public static Account getProfile(String name) {
         if (userMap.get(name) != null) {
