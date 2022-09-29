@@ -14,71 +14,19 @@
         <package.entry>AbstractUtoverseLibPlugin</package.entry>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <api.path>${basedir}/api</api.path>
+        <skipInDebug>false</skipInDebug>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
-    <version>${mvn.build.ver}</version>
+    <version>${plugin.version}</version>
 
     <profiles>
         <profile>
             <id>debug</id>
             <properties>
-                <mvn.build.ver>${plugin.version}-DEBUG</mvn.build.ver>
                 <mvn.sign.phrase>deploy</mvn.sign.phrase>
+                <skipInDebug>true</skipInDebug>
             </properties>
-        </profile>
-        <profile>
-            <id>release</id>
-            <properties>
-                <mvn.build.ver>${plugin.version}-RELEASE</mvn.build.ver>
-                <mvn.sign.phrase>install</mvn.sign.phrase>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok-maven-plugin</artifactId>
-                        <version>1.18.20.0</version>
-                        <executions>
-                            <execution>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>delombok</goal>
-                                </goals>
-                                <configuration>
-                                    <addOutputDirectory>false</addOutputDirectory>
-                                    <sourceDirectory>${api.path}/src/main/java</sourceDirectory>
-                                    <formatPreferences>
-                                        <pretty/>
-                                    </formatPreferences>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.4.1</version>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                            <detectJavaApiLink>true</detectJavaApiLink>
-                            <encoding>UTF-8</encoding>
-                            <charset>UTF-8</charset>
-                            <docencoding>UTF-8</docencoding>
-                            <locale>zh_CN</locale>
-                            <sourcepath>target/generated-sources/delombok</sourcepath>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -152,6 +100,53 @@
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generate Javadoc -->
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.20.0</version>
+                <configuration>
+                    <skip>${skipInDebug}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                        <configuration>
+                            <addOutputDirectory>false</addOutputDirectory>
+                            <sourceDirectory>${api.path}/src/main/java</sourceDirectory>
+                            <formatPreferences>
+                                <pretty/>
+                            </formatPreferences>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <skip>${skipInDebug}</skip>
+                    <classifier>javadoc</classifier>
+                    <detectJavaApiLink>true</detectJavaApiLink>
+                    <encoding>UTF-8</encoding>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                    <locale>zh_CN</locale>
+                    <sourcepath>target/generated-sources/delombok</sourcepath>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
