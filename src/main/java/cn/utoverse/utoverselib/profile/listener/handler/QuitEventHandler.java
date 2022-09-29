@@ -1,9 +1,8 @@
 package cn.utoverse.utoverselib.profile.listener.handler;
 
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.profile.UserProfile;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.Account;
+import ink.tuanzi.utoverselib.profile.UserProfile;
 import lombok.AllArgsConstructor;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -17,9 +16,9 @@ public class QuitEventHandler implements Consumer<PlayerQuitEvent> {
     @Override
     public void accept(PlayerQuitEvent event) {
         try {
-            Account account = UserProfileRepo.getProfile(event.getPlayer().getName()).clone();
-            account.getAccountTimes().setLogout(new Date().getTime());
-            UserProfile.update(account);
+            UserProfile userProfile = (UserProfile) UserProfileRepo.getProfile(event.getPlayer().getName()).clone();
+            userProfile.getUserProfileTimestamps().setLogout(new Date().getTime());
+            cn.utoverse.utoverselib.profile.UserProfile.update(userProfile);
         } catch (Exception e) {
             e.printStackTrace();
         }

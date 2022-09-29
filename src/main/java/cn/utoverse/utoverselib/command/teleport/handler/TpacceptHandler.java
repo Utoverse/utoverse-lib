@@ -2,14 +2,14 @@ package cn.utoverse.utoverselib.command.teleport.handler;
 
 import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.Account;
-import cn.utoverse.utoverselib.profile.account.TeleportReason;
-import cn.utoverse.utoverselib.profile.account.TeleportSession;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.TeleportUtil;
 import cn.utoverse.utoverselib.util.config.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
+import ink.tuanzi.utoverselib.constant.TeleportReason;
+import ink.tuanzi.utoverselib.profile.TeleportSession;
+import ink.tuanzi.utoverselib.profile.UserProfile;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,13 +25,13 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
         if (c.args().size() == 1) {
             if (c.arg(0).parse(String.class).orElse("").equals("*")) {
                 // 接受所有传送请求
-                Account senderAccount = UserProfileRepo.getProfile(c.sender());
-                if (senderAccount.getTeleportSessions().isEmpty()) {
+                UserProfile senderUserProfile = UserProfileRepo.getProfile(c.sender());
+                if (senderUserProfile.getTeleportSessions().isEmpty()) {
                     MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().warn().append("你没有待处理的传送请求").build());
                     return;
                 }
 
-                acceptPlayerTeleport(c.sender(), senderAccount.getTeleportSessions().values().stream().toList());
+                acceptPlayerTeleport(c.sender(), senderUserProfile.getTeleportSessions().values().stream().toList());
             } else {
                 // 接受指定玩家的传送
                 Optional<Player> optionalPlayer = c.arg(0).parse(Player.class);
@@ -41,8 +41,8 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
                 }
                 Player other = optionalPlayer.get();
 
-                Account senderAccount = UserProfileRepo.getProfile(c.sender());
-                TeleportSession teleportSession = senderAccount.getTeleportSessions().get(other.getName());
+                UserProfile senderUserProfile = UserProfileRepo.getProfile(c.sender());
+                TeleportSession teleportSession = senderUserProfile.getTeleportSessions().get(other.getName());
 
                 if (teleportSession == null) {
                     MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().warn().append("你没有待处理的传送请求").build());
@@ -53,12 +53,12 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
             }
         } else {
             // 接受最近一次的传送
-            Account senderAccount = UserProfileRepo.getProfile(c.sender());
-            if (senderAccount.getTeleportSessions().isEmpty()) {
+            UserProfile senderUserProfile = UserProfileRepo.getProfile(c.sender());
+            if (senderUserProfile.getTeleportSessions().isEmpty()) {
                 MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().warn().append("你没有待处理的传送请求").build());
                 return;
             }
-            List<TeleportSession> teleportSessions = senderAccount.getTeleportSessions().values().stream().toList();
+            List<TeleportSession> teleportSessions = senderUserProfile.getTeleportSessions().values().stream().toList();
             acceptPlayerTeleport(c.sender(), Arrays.asList(teleportSessions.get(teleportSessions.size() - 1)));
         }
     }
@@ -67,10 +67,10 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
     public List<String> onTabComplete(CommandContext<Player> context) throws CommandInterruptException {
         switch (context.args().size()) {
             case 1 -> {
-                Account senderAccount = UserProfileRepo.getProfile(context.sender());
+                UserProfile senderUserProfile = UserProfileRepo.getProfile(context.sender());
                 List<String> list = new ArrayList<>();
                 list.add("*");
-                list.addAll(senderAccount.getTeleportSessions().keySet());
+                list.addAll(senderUserProfile.getTeleportSessions().keySet());
                 String keyword = context.arg(0).parseOrFail(String.class).toLowerCase();
                 return list.stream().filter(s -> s.toLowerCase().startsWith(keyword)).toList();
             }
@@ -103,8 +103,8 @@ public class TpacceptHandler implements FunctionalHandler<Player> {
                     MsgUtil.sendDirectMessage(session.getRequester(), new MessageBuilder().info().append("正在传送至").space().appendEntity(sender).build());
                     acceptedSessions.add(session);
                 }
-                Account senderAccount = UserProfileRepo.getProfile(sender);
-                senderAccount.getTeleportSessions().remove(session.getRequester().getName());
+                UserProfile senderUserProfile = UserProfileRepo.getProfile(sender);
+                senderUserProfile.getTeleportSessions().remove(session.getRequester().getName());
             });
 
             if (!acceptedSessions.isEmpty()) {

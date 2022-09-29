@@ -1,9 +1,8 @@
 package cn.utoverse.utoverselib.profile.listener.handler;
 
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.profile.UserProfile;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.Account;
+import ink.tuanzi.utoverselib.profile.UserProfile;
 import lombok.AllArgsConstructor;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -20,11 +19,11 @@ public class JoinEventHandler implements Consumer<PlayerJoinEvent> {
     public void accept(PlayerJoinEvent event) {
         try {
             if (event.getPlayer().hasPlayedBefore()) {
-                Account account = UserProfileRepo.getProfile(event.getPlayer().getName()).clone();
-                account.getAccountTimes().setLogin(new Date().getTime());
-                UserProfile.update(account);
+                UserProfile userProfile = (UserProfile) UserProfileRepo.getProfile(event.getPlayer().getName()).clone();
+                userProfile.getUserProfileTimestamps().setLogin(new Date().getTime());
+                cn.utoverse.utoverselib.profile.UserProfile.update(userProfile);
             } else {
-                UserProfile.create(event.getPlayer(), new Date().getTime());
+                cn.utoverse.utoverselib.profile.UserProfile.create(event.getPlayer(), new Date().getTime());
                 plugin.getLogger().info(String.format("Player %s[%s] profile are created.", event.getPlayer().getName(), event.getPlayer().getUniqueId()));
             }
         } catch (Exception e) {

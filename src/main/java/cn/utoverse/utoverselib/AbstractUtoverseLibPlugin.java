@@ -1,17 +1,17 @@
 package cn.utoverse.utoverselib;
 
 import cn.utoverse.utoverselib.api.ApiRegistrationUtil;
-import cn.utoverse.utoverselib.api.UtoverseLibApiProvider;
+import cn.utoverse.utoverselib.api.UtoverseLibApiImpl;
 import cn.utoverse.utoverselib.command.CommandManager;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.listener.ProfileListener;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.config.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
-import cn.utoverse.utoverselibapi.UtoverseLib;
+import ink.tuanzi.utoverselib.IUtoverseLib;
 import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.ServicePriority;
 
 public class AbstractUtoverseLibPlugin extends ExtendedJavaPlugin implements UtoverseLibPlugin {
@@ -19,7 +19,7 @@ public class AbstractUtoverseLibPlugin extends ExtendedJavaPlugin implements Uto
     @Getter
     private static transient AbstractUtoverseLibPlugin instance;
     @Getter
-    private UtoverseLibApiProvider apiProvider;
+    private UtoverseLibApiImpl apiProvider;
 
     @Override
     protected void enable() {
@@ -56,8 +56,8 @@ public class AbstractUtoverseLibPlugin extends ExtendedJavaPlugin implements Uto
      * Register UtoverseLib API
      */
     private void registerApiProvider() {
-        this.apiProvider = new UtoverseLibApiProvider(this);
+        this.apiProvider = new UtoverseLibApiImpl(this);
         ApiRegistrationUtil.registerProvider(this.apiProvider);
-        this.getServer().getServicesManager().register(UtoverseLib.class, this.apiProvider, this, ServicePriority.Normal);
+        this.getServer().getServicesManager().register(IUtoverseLib.class, this.apiProvider, this, ServicePriority.Normal);
     }
 }

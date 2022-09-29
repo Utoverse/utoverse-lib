@@ -1,18 +1,18 @@
 package cn.utoverse.utoverselib.profile;
 
 import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.profile.account.Account;
-import cn.utoverse.utoverselib.profile.account.AccountTimes;
+import ink.tuanzi.utoverselib.profile.UserProfile;
+import ink.tuanzi.utoverselib.profile.UserProfileTimestamps;
 import lombok.Getter;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -22,52 +22,57 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UserProfileRepo implements TerminableModule {
 
-    private static ConcurrentHashMap<String, Account> userMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, UserProfile> userMap = new ConcurrentHashMap<>();
     @Getter
     private static List<String> usernameMap = new ArrayList<>();
     private final static String PROFILE_TIMESTAMPS_PATH = "timestamps";
     private final static String PROFILE_HOMES_PATH = "homes";
 
+    @Override
+    public void setup(@NotNull TerminableConsumer terminableConsumer) {
+        loadUserNameMapAsync();
+    }
+
     /**
      * 创建玩家档案
      *
-     * @param account 档案账号信息
+     * @param userProfile 档案账号信息
      */
-    public static void createProfile(Account account) {
-        saveProfile(account);
+    public static void createProfile(UserProfile userProfile) {
+        saveProfile(userProfile);
     }
 
     /**
      * 保存玩家档案
      *
-     * @param account 档案账号信息
+     * @param userProfile 档案账号信息
      */
-    public static void saveProfile(Account account) {
+    public static void saveProfile(UserProfile userProfile) {
         YamlConfiguration yaml = new YamlConfiguration();
-        yaml.set("uuid", account.getUuid().toString());
-        yaml.set("account-name", account.getName());
-        yaml.set("money", account.getMoney().toPlainString());
-        yaml.set("muted", account.isMuted());
-        yaml.set("jailed", account.isJailed());
-        yaml.set("ip-address", account.getIpAddress());
+        yaml.set("uuid", userProfile.getUuid().toString());
+        yaml.set("account-name", userProfile.getName());
+        yaml.set("money", userProfile.getMoney().toPlainString());
+        yaml.set("muted", userProfile.isMuted());
+        yaml.set("jailed", userProfile.isJailed());
+        yaml.set("ip-address", userProfile.getIpAddress());
 
-        yaml.set(PROFILE_TIMESTAMPS_PATH + ".last-teleport", account.getAccountTimes().getLastTeleport());
-        yaml.set(PROFILE_TIMESTAMPS_PATH + ".mute", account.getAccountTimes().getMute());
-        yaml.set(PROFILE_TIMESTAMPS_PATH + ".jail", account.getAccountTimes().getJail());
-        yaml.set(PROFILE_TIMESTAMPS_PATH + ".logout", account.getAccountTimes().getLogout());
-        yaml.set(PROFILE_TIMESTAMPS_PATH + ".login", account.getAccountTimes().getLogin());
+        yaml.set(PROFILE_TIMESTAMPS_PATH + ".last-teleport", userProfile.getUserProfileTimestamps().getLastTeleport());
+        yaml.set(PROFILE_TIMESTAMPS_PATH + ".mute", userProfile.getUserProfileTimestamps().getMute());
+        yaml.set(PROFILE_TIMESTAMPS_PATH + ".jail", userProfile.getUserProfileTimestamps().getJail());
+        yaml.set(PROFILE_TIMESTAMPS_PATH + ".logout", userProfile.getUserProfileTimestamps().getLogout());
+        yaml.set(PROFILE_TIMESTAMPS_PATH + ".login", userProfile.getUserProfileTimestamps().getLogin());
 
-        if (account.getLogoutLocation() != null) {
-            locationToYaml(yaml, "logout-location", account.getLogoutLocation());
+        if (userProfile.getLogoutLocation() != null) {
+            locationToYaml(yaml, "logout-location", userProfile.getLogoutLocation());
         }
 
-        if (account.getHomes() != null) {
-            account.getHomes().forEach((String name, Location loc) -> locationToYaml(yaml, PROFILE_HOMES_PATH + "." + name, loc));
+        if (userProfile.getHomes() != null) {
+            userProfile.getHomes().forEach((String name, Location loc) -> locationToYaml(yaml, PROFILE_HOMES_PATH + "." + name, loc));
         }
 
         try {
-            yaml.save(getProfileRawData(account.getName()));
-            userMap.put(account.getName(), account);
+            yaml.save(getProfileRawData(userProfile.getName()));
+            userMap.put(userProfile.getName(), userProfile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,16 +85,16 @@ public class UserProfileRepo implements TerminableModule {
      * @param name 玩家名
      * @return 档案账号信息
      */
-    private static Account loadProfile(String name) {
+    private static UserProfile loadProfile(String name) {
         File rawFile = getProfileRawData(name);
         if (!rawFile.exists()) {
-            UserProfile.create(Bukkit.getPlayerExact(name), new Date().getTime());
+            cn.utoverse.utoverselib.profile.UserProfile.create(Bukkit.getPlayerExact(name), new Date().getTime());
             return userMap.get(name);
         }
 
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(getProfileRawData(name));
 
-        AccountTimes accountTimes = AccountTimes.builder()
+        UserProfileTimestamps userProfileTimestamps = UserProfileTimestamps.builder()
                 .login(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".last-teleport", 0L))
                 .jail(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".mute", 0L))
                 .mute(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".jail", 0L))
@@ -97,28 +102,28 @@ public class UserProfileRepo implements TerminableModule {
                 .logout(yaml.getLong(PROFILE_TIMESTAMPS_PATH + ".login", 0L))
                 .build();
 
-        Account account = Account.builder()
+        UserProfile userProfile = UserProfile.builder()
                 .name(yaml.getString("account-name", name))
                 .uuid(UUID.fromString(yaml.getString("uuid")))
                 .money(BigDecimal.valueOf(yaml.getLong("money")))
                 .muted(yaml.getBoolean("muted"))
                 .jailed(yaml.getBoolean("jailed"))
                 .ipAddress(yaml.getString("ip-address"))
-                .accountTimes(accountTimes)
+                .userProfileTimestamps(userProfileTimestamps)
                 .teleportSessions(new TreeMap<>())
                 .build();
 
         ConfigurationSection homes = yaml.getConfigurationSection(PROFILE_HOMES_PATH);
-        account.setHomes(new HashMap<>());
+        userProfile.setHomes(new HashMap<>());
 
         if (homes != null) {
             homes.getKeys(false).forEach(key -> {
-                account.getHomes().put(key, YamlToLocation(yaml, PROFILE_HOMES_PATH + "." + key));
+                userProfile.getHomes().put(key, YamlToLocation(yaml, PROFILE_HOMES_PATH + "." + key));
             });
         }
 
-        userMap.put(account.getName(), account);
-        return account;
+        userMap.put(userProfile.getName(), userProfile);
+        return userProfile;
     }
 
 
@@ -128,7 +133,7 @@ public class UserProfileRepo implements TerminableModule {
      * @param player 玩家
      * @return Account
      */
-    public static Account getProfile(Player player) {
+    public static <T extends OfflinePlayer> UserProfile getProfile(T player) {
         return getProfile(player.getName());
     }
 
@@ -138,7 +143,7 @@ public class UserProfileRepo implements TerminableModule {
      * @param name 玩家名
      * @return Account
      */
-    public static Account getProfile(String name) {
+    public static UserProfile getProfile(String name) {
         if (userMap.get(name) != null) {
             return userMap.get(name);
         } else {
@@ -146,7 +151,10 @@ public class UserProfileRepo implements TerminableModule {
         }
     }
 
-    private void loadAllUsersAsync() {
+    /**
+     * 异步获取(刷新) 玩家名数据到缓存中
+     */
+    public static void loadUserNameMapAsync() {
         Schedulers.async().run(() -> {
             AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
             final File userdir = new File(getProfileDir());
@@ -218,10 +226,5 @@ public class UserProfileRepo implements TerminableModule {
 
     protected static String getProfileDir() {
         return AbstractUtoverseLibPlugin.getInstance().getDataFolder() + "/userdata";
-    }
-
-    @Override
-    public void setup(@NotNull TerminableConsumer terminableConsumer) {
-        loadAllUsersAsync();
     }
 }

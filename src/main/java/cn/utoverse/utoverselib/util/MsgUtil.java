@@ -8,7 +8,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +26,7 @@ public class MsgUtil {
 
     public static String getMsgPrefix() {
         try {
-            return prefixList.get(RandomUtils.nextInt(prefixList.size()));
+            return prefixList.get(RandomUtils.nextInt(0, prefixList.size()));
         } catch (Exception e) {
             return Util.parseColor("&dUtoverse>>>");
         }

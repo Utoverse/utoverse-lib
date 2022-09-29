@@ -1,11 +1,10 @@
 package cn.utoverse.utoverselib.command.home.handler;
 
 import cn.utoverse.utoverselib.command.FunctionalHandler;
-import cn.utoverse.utoverselib.profile.UserProfile;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.Account;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
+import ink.tuanzi.utoverselib.profile.UserProfile;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
 import org.bukkit.Location;
@@ -20,8 +19,8 @@ public class DelhomeHandler implements FunctionalHandler<Player> {
     public void onCommand(CommandContext<Player> c) throws CommandInterruptException {
         String homeName = c.arg(0).parseOrFail(String.class);
 
-        Account account = UserProfileRepo.getProfile(c.sender());
-        HashMap<String, Location> homes = account.getHomes();
+        UserProfile userProfile = UserProfileRepo.getProfile(c.sender());
+        HashMap<String, Location> homes = userProfile.getHomes();
 
         if (!homes.containsKey(homeName)) {
             MsgUtil.sendDirectMessage(
@@ -31,9 +30,9 @@ public class DelhomeHandler implements FunctionalHandler<Player> {
             return;
         }
 
-        Account account1 = account.clone();
-        account1.getHomes().remove(homeName);
-        UserProfile.update(account1);
+        UserProfile userProfile1 = (UserProfile) userProfile.clone();
+        userProfile1.getHomes().remove(homeName);
+        cn.utoverse.utoverselib.profile.UserProfile.update(userProfile1);
 
         MsgUtil.sendDirectMessage(
                 c.sender(),
@@ -45,8 +44,8 @@ public class DelhomeHandler implements FunctionalHandler<Player> {
     public List<String> onTabComplete(CommandContext<Player> context) throws CommandInterruptException {
         switch (context.args().size()) {
             case 1 -> {
-                Account account = UserProfileRepo.getProfile(context.sender());
-                return account.getHomes().keySet().stream().toList();
+                UserProfile userProfile = UserProfileRepo.getProfile(context.sender());
+                return userProfile.getHomes().keySet().stream().toList();
             }
             default -> {
                 return new ArrayList<>();

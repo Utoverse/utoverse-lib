@@ -5,9 +5,8 @@ import cn.utoverse.utoverselib.util.locale.ItemLocale;
 import de.themoep.minedown.MineDown;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.*;
-import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Item;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +28,7 @@ public class MessageBuilder {
      * 追加文字
      *
      * @param str 文字
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder append(String str) {
         append(str, true, ComponentBuilder.FormatRetention.NONE);
@@ -42,7 +41,7 @@ public class MessageBuilder {
      * @param str             文字
      * @param isMineDown      是否为 Minedown 语法
      * @param formatRetention 格式保留。简而言之，是否继承上一个文字组件的样式行为。
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder append(String str, boolean isMineDown, ComponentBuilder.FormatRetention formatRetention) {
         if (isMineDown) {
@@ -58,10 +57,10 @@ public class MessageBuilder {
      *
      * @param entity 生物实体
      * @param <T>    继承自Entity的实体
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public <T extends Entity> MessageBuilder appendEntity(T entity) {
-        String entityStr = "[&b[{name}&b]&r](show_entity={uuid}:{type} {name})"
+        String entityStr = "[&#FC8BAB&[{name}&#FC8BAB&]&r](show_entity={uuid}:{type} {name})"
                 .replace("{name}", Objects.requireNonNullElse(entity.getCustomName(), entity.getName()))
                 .replace("{uuid}", entity.getUniqueId().toString())
                 .replace("{type}", entity.getType().name().toLowerCase());
@@ -74,7 +73,7 @@ public class MessageBuilder {
      *
      * @param label 显示文字
      * @param text  悬浮的文字
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder appendHover(String label, String text) {
         String minedownStr = "[&r{label}](show_text={text})".replace("{label}", label).replace("{text}", text);
@@ -86,7 +85,7 @@ public class MessageBuilder {
      * 添加点击式执行指令
      *
      * @param command 指令
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder appendCommand(String label, String command) {
         return appendCommand(label, command, "点击执行此指令");
@@ -97,12 +96,12 @@ public class MessageBuilder {
      *
      * @param command   指令
      * @param hoverText 悬浮在指令上的文字
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder appendCommand(String label, String command, String hoverText) {
         String cmd = command.startsWith("/") ? command : "/" + command;
 
-        String minedownStr = "[&r{label}](show_text={text} run_command={cmd})".replace("{label}", label).replace("{text}", hoverText).replace("{cmd}", cmd);
+        String minedownStr = "[&#FFA500&&r{label}&r](show_text={text} run_command={cmd})".replace("{label}", label).replace("{text}", hoverText).replace("{cmd}", cmd);
         append(minedownStr, true, ComponentBuilder.FormatRetention.NONE);
         return this;
     }
@@ -111,7 +110,7 @@ public class MessageBuilder {
      * 添加一个物品堆 (ItemStack)
      *
      * @param itemStack 物品堆
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder appendItemStack(ItemStack itemStack) {
         int amount = itemStack.getAmount();
@@ -134,20 +133,40 @@ public class MessageBuilder {
     /**
      * 添加一个空格。主要用于间距。
      *
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder space() {
-        append(ChatColor.RESET + " ", false, ComponentBuilder.FormatRetention.NONE);
+        append(ChatColor.RESET + " ", true, ComponentBuilder.FormatRetention.NONE);
         return this;
     }
 
     /**
      * 添加一个回车。主要用于间距。
      *
-     * @return MessageBuilder
+     * @return {@code this}.
      */
     public MessageBuilder enter() {
-        append(ChatColor.RESET + "\n", false, ComponentBuilder.FormatRetention.NONE);
+        append(ChatColor.RESET + "\n", true, ComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    /**
+     * 普通信息颜色
+     *
+     * @return {@code this}.
+     */
+    public MessageBuilder info() {
+        messageLevel = MessageLevel.INFO;
+        return this;
+    }
+
+    /**
+     * 警告信息颜色
+     *
+     * @return {@code this}.
+     */
+    public MessageBuilder warn() {
+        messageLevel = MessageLevel.WARN;
         return this;
     }
 
@@ -158,26 +177,6 @@ public class MessageBuilder {
      */
     public BaseComponent[] build() {
         return this.componentBuilder.create();
-    }
-
-    /**
-     * 普通信息颜色
-     *
-     * @return MessageBuilder
-     */
-    public MessageBuilder info() {
-        messageLevel = MessageLevel.INFO;
-        return this;
-    }
-
-    /**
-     * 警告信息颜色
-     *
-     * @return MessageBuilder
-     */
-    public MessageBuilder warn() {
-        messageLevel = MessageLevel.WARN;
-        return this;
     }
 
     private static TextComponent getItemTooltipComponent(String message, ItemStack item, String id, int count) {

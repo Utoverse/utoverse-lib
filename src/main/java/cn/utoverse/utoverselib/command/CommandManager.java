@@ -9,5 +9,6 @@ public class CommandManager {
     public CommandManager() {
         AbstractUtoverseLibPlugin.getInstance().bindModule(new TeleportCommandsModule());
         AbstractUtoverseLibPlugin.getInstance().bindModule(new HomeCommandsModule());
+//        AbstractUtoverseLibPlugin.getInstance().bindModule(new EconomyCommandsModule());
     }
 }
