@@ -2,12 +2,12 @@ package cn.utoverse.utoverselib.command.home.handler;
 
 import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.Account;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.TeleportUtil;
-import cn.utoverse.utoverselib.util.config.ConfigFile;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
+import ink.tuanzi.utoverselib.profile.UserProfile;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
 import org.bukkit.Bukkit;
@@ -43,8 +43,8 @@ public class HomeHandler implements FunctionalHandler<Player> {
             MsgUtil.sendDirectMessage(c.sender(), new MessageBuilder().info().append("正在传送...").build());
         } else {
             String homeName = c.arg(0).parse(String.class).get();
-            Account account = UserProfileRepo.getProfile(c.sender());
-            HashMap<String, Location> homes = account.getHomes();
+            UserProfile userProfile = UserProfileRepo.getProfile(c.sender());
+            HashMap<String, Location> homes = userProfile.getHomes();
 
             if (!homes.containsKey(homeName)) {
                 MsgUtil.sendDirectMessage(
@@ -63,8 +63,8 @@ public class HomeHandler implements FunctionalHandler<Player> {
     public List<String> onTabComplete(CommandContext<Player> context) throws CommandInterruptException {
         switch (context.args().size()) {
             case 1 -> {
-                Account account = UserProfileRepo.getProfile(context.sender());
-                return account.getHomes().keySet().stream().toList();
+                UserProfile userProfile = UserProfileRepo.getProfile(context.sender());
+                return userProfile.getHomes().keySet().stream().toList();
             }
             default -> {
                 return new ArrayList<>();

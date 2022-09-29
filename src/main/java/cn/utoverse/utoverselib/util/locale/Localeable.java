@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.util.locale;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,7 @@ public class Localeable {
     protected static String localeDir = "locale";
 
     protected static InputStream getLocaleFileStream(@NotNull String ymlFileName) {
-        return AbstractUtoverseLibPlugin.getInstance().getResource(getLocaleDir(ymlFileName));
+        return UtoverseLibPlugin.getInstance().getResource(getLocaleDir(ymlFileName));
     }
 
     protected static String getLocaleDir(@NotNull String ymlFileName) {

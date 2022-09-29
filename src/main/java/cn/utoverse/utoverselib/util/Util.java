@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.util;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import com.google.common.collect.EvictingQueue;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -122,7 +122,7 @@ public class Util {
         if (Bukkit.isPrimaryThread()) {
             runnable.run();
         } else {
-            Bukkit.getScheduler().runTask(AbstractUtoverseLibPlugin.getInstance(), runnable);
+            Bukkit.getScheduler().runTask(UtoverseLibPlugin.getInstance(), runnable);
         }
     }
 }

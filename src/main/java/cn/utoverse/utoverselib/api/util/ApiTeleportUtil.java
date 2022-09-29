@@ -1,14 +1,14 @@
 package cn.utoverse.utoverselib.api.util;
 
 import cn.utoverse.utoverselib.util.TeleportUtil;
-import cn.utoverse.utoverselibapi.util.Teleport;
+import ink.tuanzi.utoverselib.util.ITeleport;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ApiTeleportUtil implements Teleport {
+public class ApiTeleportUtil implements ITeleport {
     @Override
     public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location) {
         return TeleportUtil.teleportAsync(entity, location);

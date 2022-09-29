@@ -2,13 +2,13 @@ package cn.utoverse.utoverselib.command.teleport.handler;
 
 import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.TeleportReason;
-import cn.utoverse.utoverselib.profile.account.TeleportSession;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.Util;
-import cn.utoverse.utoverselib.util.config.ConfigFile;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
+import ink.tuanzi.utoverselib.constant.TeleportReason;
+import ink.tuanzi.utoverselib.profile.TeleportSession;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -44,9 +44,9 @@ public class TpaHandler implements FunctionalHandler<Player> {
 
         BaseComponent[] msgComp = new MessageBuilder().info().append("玩家").space().appendEntity(c.sender()).space()
                 .append("请求传送到你这里").enter()
-                .append("若想接受传送，输入").appendCommand("&9/tpaccept", "/tpaccept").enter()
-                .append("若想拒绝传送，输入").appendCommand("&9/tpdeny", "/tpdeny").enter()
-                .append("此请求将在").append("&9" + duration + "秒").append("后自动取消")
+                .append("若想接受传送，输入").appendCommand("/tpaccept", "/tpaccept").enter()
+                .append("若想拒绝传送，输入").appendCommand("/tpdeny", "/tpdeny").enter()
+                .append("此请求将在").append(String.valueOf(duration)).append("秒后自动取消")
                 .build();
 
         UserProfileRepo.getProfile(other).getTeleportSessions().put(

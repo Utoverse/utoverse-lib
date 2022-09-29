@@ -2,13 +2,13 @@ package cn.utoverse.utoverselib.command.teleport.handler;
 
 import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
-import cn.utoverse.utoverselib.profile.account.TeleportReason;
-import cn.utoverse.utoverselib.profile.account.TeleportSession;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.Util;
-import cn.utoverse.utoverselib.util.config.ConfigFile;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
+import ink.tuanzi.utoverselib.constant.TeleportReason;
+import ink.tuanzi.utoverselib.profile.TeleportSession;
 import me.lucko.helper.command.CommandInterruptException;
 import me.lucko.helper.command.context.CommandContext;
 import net.md_5.bungee.api.chat.BaseComponent;

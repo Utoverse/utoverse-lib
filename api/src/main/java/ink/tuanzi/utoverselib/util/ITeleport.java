@@ -1,4 +1,4 @@
-package cn.utoverse.utoverselibapi.util;
+package ink.tuanzi.utoverselib.util;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 传送工具类
  */
-public interface Teleport {
+public interface ITeleport {
     /**
      * 异步传送一个生物实体到某处
      *

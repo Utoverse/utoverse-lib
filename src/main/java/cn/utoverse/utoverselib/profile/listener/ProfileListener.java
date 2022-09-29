@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.profile.listener;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import cn.utoverse.utoverselib.profile.listener.handler.JoinEventHandler;
 import cn.utoverse.utoverselib.profile.listener.handler.QuitEventHandler;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 @AllArgsConstructor
 public class ProfileListener implements TerminableModule {
-    private AbstractUtoverseLibPlugin plugin;
+    private UtoverseLibPlugin plugin;
 
     @Override
     public void setup(@Nonnull TerminableConsumer consumer) {

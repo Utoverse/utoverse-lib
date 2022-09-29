@@ -1,9 +1,10 @@
 package cn.utoverse.utoverselib.util.config;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import com.tchristofferson.configupdater.ConfigUpdater;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
+import ink.tuanzi.utoverselib.util.IConfiguration;
 import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-public class Configuration {
+public class Configuration implements IConfiguration {
 
     @Getter
     private static ConcurrentHashMap<ConfigFile, YamlConfiguration> files = new ConcurrentHashMap<>();
@@ -22,7 +23,7 @@ public class Configuration {
      * 载入配置文件
      */
     public static void init() {
-        AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
+        UtoverseLibPlugin plugin = UtoverseLibPlugin.getInstance();
 
         List<String> defaultFiles = Arrays.asList(ConfigFile.CONFIG.getPath());
         for (String name : defaultFiles) {
@@ -38,14 +39,19 @@ public class Configuration {
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "Error while trying to update a config file delete all config files and restart the server", ex);
         }
-        reload();
+        reloadAllConfig();
     }
 
     /**
      * 重载配置文件
      */
-    public static void reload() {
-        AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
+    public static void reloadAllConfig() {
+        UtoverseLibPlugin plugin = UtoverseLibPlugin.getInstance();
         files.put(ConfigFile.CONFIG, YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + ConfigFile.CONFIG.getPath())));
+    }
+
+    @Override
+    public void reload() {
+        reloadAllConfig();
     }
 }

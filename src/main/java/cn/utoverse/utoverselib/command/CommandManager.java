@@ -1,13 +1,14 @@
 package cn.utoverse.utoverselib.command;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import cn.utoverse.utoverselib.command.home.HomeCommandsModule;
 import cn.utoverse.utoverselib.command.teleport.TeleportCommandsModule;
 
 public class CommandManager {
 
     public CommandManager() {
-        AbstractUtoverseLibPlugin.getInstance().bindModule(new TeleportCommandsModule());
-        AbstractUtoverseLibPlugin.getInstance().bindModule(new HomeCommandsModule());
+        UtoverseLibPlugin.getInstance().bindModule(new TeleportCommandsModule());
+        UtoverseLibPlugin.getInstance().bindModule(new HomeCommandsModule());
+//        AbstractUtoverseLibPlugin.getInstance().bindModule(new EconomyCommandsModule());
     }
 }

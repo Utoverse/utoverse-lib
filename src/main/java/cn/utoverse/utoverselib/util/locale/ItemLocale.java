@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.util.locale;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import cn.utoverse.utoverselib.util.Util;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ public class ItemLocale {
     private static YamlConfiguration localeList;
 
     public static void loadLocale() {
-        AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
+        UtoverseLibPlugin plugin = UtoverseLibPlugin.getInstance();
 
         File itemi18nFile = new File(plugin.getDataFolder(), Localeable.getLocaleDir("item"));
         YamlConfiguration defaultYaml = YamlConfiguration.loadConfiguration(

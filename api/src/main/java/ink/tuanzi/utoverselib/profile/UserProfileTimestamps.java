@@ -1,11 +1,14 @@
-package cn.utoverse.utoverselib.profile.account;
+package ink.tuanzi.utoverselib.profile;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 玩家档案中与时间相关的数据
+ */
 @Builder
-public class AccountTimes {
+public class UserProfileTimestamps {
 
     @Getter
     @Setter
