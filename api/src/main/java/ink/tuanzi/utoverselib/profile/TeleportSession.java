@@ -1,5 +1,6 @@
-package cn.utoverse.utoverselib.profile.account;
+package ink.tuanzi.utoverselib.profile;
 
+import ink.tuanzi.utoverselib.constant.TeleportReason;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,9 @@ import org.bukkit.entity.Player;
 
 import java.util.Date;
 
+/**
+ * 玩家档案中与传送会话相关的数据
+ */
 @Builder
 public class TeleportSession {
     /**

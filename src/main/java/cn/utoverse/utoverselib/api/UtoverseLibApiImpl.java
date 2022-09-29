@@ -1,32 +1,23 @@
 package cn.utoverse.utoverselib.api;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.api.profile.ApiUserProfile;
-import cn.utoverse.utoverselib.api.util.ApiTeleportUtil;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import ink.tuanzi.utoverselib.IUtoverseLib;
-import ink.tuanzi.utoverselib.profile.UserProfileRepo;
-import ink.tuanzi.utoverselib.util.ITeleport;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class UtoverseLibApiImpl implements IUtoverseLib {
-    private AbstractUtoverseLibPlugin plugin;
+    private UtoverseLibPlugin plugin;
 
-    public UtoverseLibApiImpl(AbstractUtoverseLibPlugin plugin) {
+    public UtoverseLibApiImpl(UtoverseLibPlugin plugin) {
         this.plugin = plugin;
     }
 
-    @NotNull
-    public static AbstractUtoverseLibPlugin getInstance() {
-        return AbstractUtoverseLibPlugin.getInstance();
+    public JavaPlugin getInstance() {
+        return UtoverseLibPlugin.getInstance();
     }
 
     @Override
-    public ITeleport getTeleportUtil() {
-        return new ApiTeleportUtil();
-    }
-
-    @Override
-    public UserProfileRepo getUserProfileUtil() {
-        return new ApiUserProfile();
+    public FileConfiguration getConfig() {
+        return this.getConfig();
     }
 }

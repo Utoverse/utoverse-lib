@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.profile.listener.handler;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import ink.tuanzi.utoverselib.profile.UserProfile;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 @AllArgsConstructor
 public class QuitEventHandler implements Consumer<PlayerQuitEvent> {
-    private AbstractUtoverseLibPlugin plugin;
+    private UtoverseLibPlugin plugin;
 
     @Override
     public void accept(PlayerQuitEvent event) {

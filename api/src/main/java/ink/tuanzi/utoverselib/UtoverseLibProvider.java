@@ -1,4 +1,4 @@
-package cn.utoverse.utoverselibapi;
+package ink.tuanzi.utoverselib;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -6,10 +6,10 @@ import static org.jetbrains.annotations.ApiStatus.Internal;
 
 public final class UtoverseLibProvider {
 
-    private static UtoverseLib instance = null;
+    private static IUtoverseLib instance = null;
 
     /**
-     * Gets an instance of the {@link UtoverseLib} API,
+     * Gets an instance of the {@link IUtoverseLib} API,
      * throwing {@link IllegalStateException} if the API is not loaded yet.
      *
      * <p>This method will never return null.</p>
@@ -17,8 +17,8 @@ public final class UtoverseLibProvider {
      * @return an instance of the LuckPerms API
      * @throws IllegalStateException if the API is not loaded yet
      */
-    public static @NonNull UtoverseLib get() {
-        UtoverseLib instance = UtoverseLibProvider.instance;
+    public static @NonNull IUtoverseLib get() {
+        IUtoverseLib instance = UtoverseLibProvider.instance;
         if (instance == null) {
             throw new NotLoadedException();
         }
@@ -26,7 +26,7 @@ public final class UtoverseLibProvider {
     }
 
     @Internal
-    static void register(UtoverseLib instance) {
+    static void register(IUtoverseLib instance) {
         UtoverseLibProvider.instance = instance;
     }
 

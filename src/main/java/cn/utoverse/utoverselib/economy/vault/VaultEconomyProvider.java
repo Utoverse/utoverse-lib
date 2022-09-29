@@ -1,7 +1,7 @@
 package cn.utoverse.utoverselib.economy.vault;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
-import cn.utoverse.utoverselib.util.config.ConfigFile;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import lombok.AllArgsConstructor;
 import me.lucko.helper.terminable.TerminableConsumer;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VaultEconomyProvider implements TerminableModule, Economy {
 
-    private AbstractUtoverseLibPlugin plugin;
+    private UtoverseLibPlugin plugin;
     private YamlConfiguration config;
 
     @Override

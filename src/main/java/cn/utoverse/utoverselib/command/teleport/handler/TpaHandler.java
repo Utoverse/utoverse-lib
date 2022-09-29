@@ -4,7 +4,7 @@ import cn.utoverse.utoverselib.command.FunctionalHandler;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.util.MsgUtil;
 import cn.utoverse.utoverselib.util.Util;
-import cn.utoverse.utoverselib.util.config.ConfigFile;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import cn.utoverse.utoverselib.util.message.MessageBuilder;
 import ink.tuanzi.utoverselib.constant.TeleportReason;

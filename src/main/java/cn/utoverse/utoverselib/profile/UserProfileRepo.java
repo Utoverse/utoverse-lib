@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.profile;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import ink.tuanzi.utoverselib.profile.UserProfile;
 import ink.tuanzi.utoverselib.profile.UserProfileTimestamps;
 import lombok.Getter;
@@ -156,7 +156,7 @@ public class UserProfileRepo implements TerminableModule {
      */
     public static void loadUserNameMapAsync() {
         Schedulers.async().run(() -> {
-            AbstractUtoverseLibPlugin plugin = AbstractUtoverseLibPlugin.getInstance();
+            UtoverseLibPlugin plugin = UtoverseLibPlugin.getInstance();
             final File userdir = new File(getProfileDir());
             if (!userdir.exists()) {
                 return;
@@ -225,6 +225,6 @@ public class UserProfileRepo implements TerminableModule {
     }
 
     protected static String getProfileDir() {
-        return AbstractUtoverseLibPlugin.getInstance().getDataFolder() + "/userdata";
+        return UtoverseLibPlugin.getInstance().getDataFolder() + "/userdata";
     }
 }

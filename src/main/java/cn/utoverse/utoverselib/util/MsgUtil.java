@@ -1,6 +1,6 @@
 package cn.utoverse.utoverselib.util;
 
-import cn.utoverse.utoverselib.AbstractUtoverseLibPlugin;
+import cn.utoverse.utoverselib.UtoverseLibPlugin;
 import de.themoep.minedown.MineDown;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,7 +60,7 @@ public class MsgUtil {
 
 
     public static void broadcast(@NotNull ChatMessageType messageType, @NotNull String... message) {
-        broadcast(messageType, (List<Player>) AbstractUtoverseLibPlugin.getInstance().getServer().getOnlinePlayers(), message);
+        broadcast(messageType, (List<Player>) UtoverseLibPlugin.getInstance().getServer().getOnlinePlayers(), message);
     }
 
     public static void broadcast(@NotNull ChatMessageType messageType, @NotNull List<Player> playerCollection, @NotNull String... message) {
@@ -73,7 +73,7 @@ public class MsgUtil {
     }
 
     public static void broadcast(@NotNull ChatMessageType messageType, @NotNull BaseComponent[] components) {
-        broadcast(messageType, components, (List<Player>) AbstractUtoverseLibPlugin.getInstance().getServer().getOnlinePlayers());
+        broadcast(messageType, components, (List<Player>) UtoverseLibPlugin.getInstance().getServer().getOnlinePlayers());
     }
 
     public static void broadcast(@NotNull ChatMessageType messageType, @NotNull BaseComponent[] components, @NotNull List<Player> playerCollection) {

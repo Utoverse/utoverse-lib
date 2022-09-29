@@ -1,4 +1,4 @@
-package cn.utoverse.utoverselib.util.config;
+package ink.tuanzi.utoverselib.constant;
 
 import lombok.Getter;
 
