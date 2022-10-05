@@ -1,7 +1,8 @@
 package cn.utoverse.utoverselib.command.economy;
 
 import cn.utoverse.utoverselib.command.CommandBuilder;
-import cn.utoverse.utoverselib.command.home.handler.HomeHandler;
+import cn.utoverse.utoverselib.command.economy.handler.EconomyHandler;
+import cn.utoverse.utoverselib.command.economy.handler.PayHandler;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ public class EconomyCommandsModule implements TerminableModule {
                 .assertPermission("utolib.command.economy")
                 .assertUsage("[give|take|set|reset] [player] [count]")
                 .description("管理服务器的经济")
-                .handler(new HomeHandler())
+                .handler(new EconomyHandler())
                 .registerAndBind(consumer, "economy", "econ");
 
         new CommandBuilder()
@@ -22,7 +23,7 @@ public class EconomyCommandsModule implements TerminableModule {
                 .assertPermission("utolib.command.pay")
                 .assertUsage("<name>")
                 .description("向玩家支付货币")
-                .handler(new HomeHandler())
+                .handler(new PayHandler())
                 .registerAndBind(consumer, "pay");
 
     }

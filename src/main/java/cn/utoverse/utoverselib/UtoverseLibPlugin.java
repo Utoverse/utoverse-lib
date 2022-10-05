@@ -3,23 +3,28 @@ package cn.utoverse.utoverselib;
 import cn.utoverse.utoverselib.api.ApiRegistrationUtil;
 import cn.utoverse.utoverselib.api.UtoverseLibApiImpl;
 import cn.utoverse.utoverselib.command.CommandManager;
+import cn.utoverse.utoverselib.database.IDatabaseCore;
+import cn.utoverse.utoverselib.database.DatabaseCoreImpl;
+import cn.utoverse.utoverselib.database.DatabaseProvider;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.listener.ProfileListener;
 import cn.utoverse.utoverselib.util.MsgUtil;
-import ink.tuanzi.utoverselib.constant.ConfigFile;
 import cn.utoverse.utoverselib.util.config.Configuration;
 import ink.tuanzi.utoverselib.IUtoverseLib;
+import ink.tuanzi.utoverselib.constant.ConfigFile;
 import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.ServicePriority;
+import org.jetbrains.annotations.NotNull;
 
-public class UtoverseLibPlugin extends ExtendedJavaPlugin {
+public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabaseProvider {
 
     @Getter
     private static transient UtoverseLibPlugin instance;
     @Getter
     private UtoverseLibApiImpl apiProvider;
+    private DatabaseCoreImpl databaseCore;
 
     @Override
     protected void enable() {
@@ -38,6 +43,8 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin {
         MsgUtil.printToConsole("&bServer version: " + getServer().getVersion());
         MsgUtil.printToConsole("&cSite: " + getDescription().getWebsite());
         MsgUtil.printToConsole("&e-----------------------");
+
+        setupDatabase();
 
         new CommandManager();
         this.bindModule(new ProfileListener(this));
@@ -59,5 +66,20 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin {
         this.apiProvider = new UtoverseLibApiImpl(this);
         ApiRegistrationUtil.registerProvider(this.apiProvider);
         this.getServer().getServicesManager().register(IUtoverseLib.class, this.apiProvider, this, ServicePriority.Normal);
+    }
+
+    private void setupDatabase() {
+        getLogger().info("Setting up database...");
+
+        this.databaseCore = new DatabaseCoreImpl();
+        this.databaseCore.bindWith(this);
+
+        provideService(IDatabaseCore.class, this.databaseCore);
+    }
+
+    @NotNull
+    @Override
+    public IDatabaseCore getCore() {
+        return this.databaseCore;
     }
 }

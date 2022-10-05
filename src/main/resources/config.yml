@@ -15,6 +15,9 @@ msg-prefix:
   - "[元界](color=#6768AB bold hover=彩通·2022年代表色-长春花蓝 &8/ &7#6768AB) &f&l>>> "
   - "[元界](color=#002FA7 bold hover=克莱因蓝 &8/ &7#002FA7) &f&l>>> "
 
+database:
+  debug: false
+
 # 玩家死亡/床丢失的情况下传送至此世界
 spawn-world: "spawncity"
 

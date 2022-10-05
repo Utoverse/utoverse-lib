@@ -10,10 +10,10 @@ public class ApiRegistrationUtil {
 
     static {
         try {
-            REGISTER = UtoverseLibApiImpl.class.getDeclaredMethod("register", IUtoverseLib.class);
+            REGISTER = UtoverseLibProvider.class.getDeclaredMethod("register", IUtoverseLib.class);
             REGISTER.setAccessible(true);
 
-            UNREGISTER = UtoverseLibApiImpl.class.getDeclaredMethod("unregister");
+            UNREGISTER = UtoverseLibProvider.class.getDeclaredMethod("unregister");
             UNREGISTER.setAccessible(true);
         } catch (NoSuchMethodException e) {
             throw new ExceptionInInitializerError(e);
