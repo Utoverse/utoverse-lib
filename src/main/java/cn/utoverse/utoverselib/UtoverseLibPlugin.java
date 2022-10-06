@@ -3,9 +3,10 @@ package cn.utoverse.utoverselib;
 import cn.utoverse.utoverselib.api.ApiRegistrationUtil;
 import cn.utoverse.utoverselib.api.UtoverseLibApiImpl;
 import cn.utoverse.utoverselib.command.CommandManager;
-import cn.utoverse.utoverselib.database.IDatabaseCore;
 import cn.utoverse.utoverselib.database.DatabaseCoreImpl;
 import cn.utoverse.utoverselib.database.DatabaseProvider;
+import cn.utoverse.utoverselib.database.IDatabaseCore;
+import cn.utoverse.utoverselib.database.model.Account;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.listener.ProfileListener;
 import cn.utoverse.utoverselib.util.MsgUtil;
@@ -16,7 +17,10 @@ import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.ServicePriority;
+import org.hibernate.SessionFactory;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabaseProvider {
 
@@ -25,6 +29,10 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabasePro
     @Getter
     private UtoverseLibApiImpl apiProvider;
     private DatabaseCoreImpl databaseCore;
+
+    private static final String HIBERNATE_CONFIG_FILE_NAME = "hibernate.cfg.xml";
+    @Getter
+    private SessionFactory sessionFactory;
 
     @Override
     protected void enable() {
@@ -44,7 +52,8 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabasePro
         MsgUtil.printToConsole("&cSite: " + getDescription().getWebsite());
         MsgUtil.printToConsole("&e-----------------------");
 
-        setupDatabase();
+//        setupDatabase();
+        setupHibernate();
 
         new CommandManager();
         this.bindModule(new ProfileListener(this));
@@ -81,5 +90,13 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabasePro
     @Override
     public IDatabaseCore getCore() {
         return this.databaseCore;
+    }
+
+    public void setupHibernate() {
+        this.saveResource(HIBERNATE_CONFIG_FILE_NAME, false);
+        this.sessionFactory = new org.hibernate.cfg.Configuration()
+                .addAnnotatedClass(Account.class)
+                .configure(new File(this.getDataFolder().getAbsolutePath() + "/" + HIBERNATE_CONFIG_FILE_NAME))
+                .buildSessionFactory();
     }
 }

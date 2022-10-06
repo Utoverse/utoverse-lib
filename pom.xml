@@ -120,6 +120,10 @@
                             <include>com.zaxxer:HikariCP</include>
                             <include>me.lucko:sql-streams</include>
                             <include>com.tchristofferson:ConfigUpdater</include>
+                            <include>org.hibernate:hibernate-core</include>
+                            <include>com.github.gwenn:sqlite-dialect</include>
+                            <include>javax.persistence:javax.persistence-api</include>
+                            <include>javax.transaction:javax.transaction-api</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -350,6 +354,31 @@
             <groupId>me.lucko</groupId>
             <artifactId>sql-streams</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.6.5.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate.common</groupId>
+                    <artifactId>hibernate-commons-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.gwenn</groupId>
+            <artifactId>sqlite-dialect</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
         </dependency>
     </dependencies>
 
