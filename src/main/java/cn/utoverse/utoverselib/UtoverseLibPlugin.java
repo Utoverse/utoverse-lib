@@ -3,9 +3,9 @@ package cn.utoverse.utoverselib;
 import cn.utoverse.utoverselib.api.ApiRegistrationUtil;
 import cn.utoverse.utoverselib.api.UtoverseLibApiImpl;
 import cn.utoverse.utoverselib.command.CommandManager;
-import cn.utoverse.utoverselib.database.IDatabaseCore;
 import cn.utoverse.utoverselib.database.DatabaseCoreImpl;
 import cn.utoverse.utoverselib.database.DatabaseProvider;
+import cn.utoverse.utoverselib.database.IDatabaseCore;
 import cn.utoverse.utoverselib.profile.UserProfileRepo;
 import cn.utoverse.utoverselib.profile.listener.ProfileListener;
 import cn.utoverse.utoverselib.util.MsgUtil;
@@ -57,6 +57,9 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabasePro
 
     @Override
     protected void disable() {
+        if (this.databaseCore != null) {
+            this.databaseCore.close();
+        }
     }
 
     /**
@@ -73,7 +76,6 @@ public class UtoverseLibPlugin extends ExtendedJavaPlugin implements DatabasePro
 
         this.databaseCore = new DatabaseCoreImpl();
         this.databaseCore.bindWith(this);
-
         provideService(IDatabaseCore.class, this.databaseCore);
     }
 

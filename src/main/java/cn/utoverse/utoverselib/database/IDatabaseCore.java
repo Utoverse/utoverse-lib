@@ -133,7 +133,7 @@ public interface IDatabaseCore extends Terminable {
      * @return the results of the database query
      * @see #queryAsync(String, SqlFunction) to perform this query asynchronously
      */
-    default <R> Optional<R> query(@Language("SQLite") @Nonnull String query, @Nonnull SqlFunction<ResultSet, R> handler) {
+    default <R> Optional<R> query(@Nonnull String query, @Nonnull SqlFunction<ResultSet, R> handler) {
         return this.query(query, stmt -> {}, handler);
     }
 
@@ -153,7 +153,7 @@ public interface IDatabaseCore extends Terminable {
      * @return a Promise of an asynchronous database query
      * @see #query(String, SqlFunction) to perform this query synchronously
      */
-    default <R> Promise<Optional<R>> queryAsync(@Language("SQLite") @Nonnull String query, @Nonnull SqlConsumer<PreparedStatement> preparer, @Nonnull SqlFunction<ResultSet, R> handler) {
+    default <R> Promise<Optional<R>> queryAsync(@Nonnull String query, @Nonnull SqlConsumer<PreparedStatement> preparer, @Nonnull SqlFunction<ResultSet, R> handler) {
         return Schedulers.async().supply(() -> this.query(query, preparer, handler));
     }
     /**

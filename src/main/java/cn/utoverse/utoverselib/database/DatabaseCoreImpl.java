@@ -35,7 +35,7 @@ public class DatabaseCoreImpl implements IDatabaseCore {
     public DatabaseCoreImpl() {
         final HikariConfig config = new HikariConfig();
 
-        config.setPoolName("utoverse-lib-database-" + POOL_COUNTER.getAndIncrement());
+        config.setPoolName("utoverse-lib-" + POOL_COUNTER.getAndIncrement());
         config.setDriverClassName("org.sqlite.JDBC");
         config.setJdbcUrl("jdbc:sqlite:plugins/UtoverseLib/" + databaseFileName + ".db");
         config.setConnectionTestQuery("SELECT 1");
@@ -46,7 +46,6 @@ public class DatabaseCoreImpl implements IDatabaseCore {
         config.setMaxLifetime(MAX_LIFETIME);
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
         config.setLeakDetectionThreshold(LEAK_DETECTION_THRESHOLD);
-
 
         config.setMaxLifetime(60000); // 60 Sec
         config.setIdleTimeout(45000); // 45 Sec
